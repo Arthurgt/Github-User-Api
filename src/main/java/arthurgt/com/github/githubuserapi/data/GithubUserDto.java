@@ -1,4 +1,7 @@
-package arthurgt.com.github.githubuserapi.dto;
+package arthurgt.com.github.githubuserapi.data;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDate;
 
 public class GithubUserDto {
 
@@ -6,13 +9,17 @@ public class GithubUserDto {
     private String login;
     private String name;
     private String type;
+    @JsonProperty("avatar_url")
     private String avatarUrl;
     private Integer followers;
+    @JsonProperty("public_repos")
     private Integer publicRepos;
+    @JsonProperty("created_at")
+    private LocalDate createdAt;
 
     public GithubUserDto() {}
 
-    public GithubUserDto(long id, String login, String name, String type, String avatarUrl, Integer followers, Integer publicRepos) {
+    public GithubUserDto(long id, String login, String name, String type, String avatarUrl, Integer followers, Integer publicRepos, LocalDate createdAt) {
         this.id = id;
         this.login = login;
         this.name = name;
@@ -20,6 +27,7 @@ public class GithubUserDto {
         this.avatarUrl = avatarUrl;
         this.followers = followers;
         this.publicRepos = publicRepos;
+        this.createdAt = createdAt;
     }
 
     public long getId() {
@@ -76,5 +84,27 @@ public class GithubUserDto {
 
     public void setPublicRepos(Integer publicRepos) {
         this.publicRepos = publicRepos;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "GithubUserDto{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", followers=" + followers +
+                ", publicRepos=" + publicRepos +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }
