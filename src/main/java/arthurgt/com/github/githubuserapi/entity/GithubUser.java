@@ -7,29 +7,17 @@ import jakarta.persistence.*;
 public class GithubUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private long id;
-
     @Column(name="login")
     private String login;
 
     @Column(name="request_count")
-    private Integer request_count;
+    private Integer requestCount;
 
     public GithubUser() {}
 
-    public GithubUser(String login, Integer request_count) {
+    public GithubUser(String login, Integer requestCount) {
         this.login = login;
-        this.request_count = request_count;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+        this.requestCount = requestCount;
     }
 
     public String getLogin() {
@@ -40,20 +28,19 @@ public class GithubUser {
         this.login = login;
     }
 
-    public Integer getRequest_count() {
-        return request_count;
+    public Integer getRequestCount() {
+        return requestCount;
     }
 
-    public void setRequest_count(Integer request_count) {
-        this.request_count = request_count;
+    public void setRequestCount(Integer requestCount) {
+        this.requestCount = requestCount;
     }
 
     @Override
     public String toString() {
         return "GithubUser{" +
-                "id=" + id +
                 ", login='" + login + '\'' +
-                ", request_count=" + request_count +
+                ", requestCount=" + requestCount +
                 '}';
     }
 }
