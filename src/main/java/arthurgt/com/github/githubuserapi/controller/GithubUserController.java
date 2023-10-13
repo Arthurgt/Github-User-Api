@@ -1,5 +1,6 @@
 package arthurgt.com.github.githubuserapi.controller;
 
+import arthurgt.com.github.githubuserapi.data.GithubUserResponse;
 import arthurgt.com.github.githubuserapi.service.GithubUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +18,8 @@ public class GithubUserController {
     public GithubUserController(GithubUserService githubUserService) {this.githubUserService = githubUserService;}
 
     @GetMapping("/{login}")
-    public String getGithubUserInformation(@PathVariable String login) {
-        return null;
+    public GithubUserResponse getGithubUserInformation(@PathVariable String login) {
+        return githubUserService.getGithubUserInformation(login);
     }
 
 }
