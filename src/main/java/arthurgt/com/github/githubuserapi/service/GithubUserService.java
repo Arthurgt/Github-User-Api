@@ -1,7 +1,10 @@
 package arthurgt.com.github.githubuserapi.service;
 
+import arthurgt.com.github.githubuserapi.dao.GithubUserDAO;
+import arthurgt.com.github.githubuserapi.data.GithubUserMapper;
 import arthurgt.com.github.githubuserapi.data.GithubUserResponse;
 import arthurgt.com.github.githubuserapi.data.GithubUserDto;
+import arthurgt.com.github.githubuserapi.entity.GithubUser;
 import arthurgt.com.github.githubuserapi.error.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,36 +21,52 @@ public class GithubUserService {
     @Value("${github.api.headers.xGitHubApiVersion}")
     private String xGitHubApiVersion;
 
-    @Autowired
+    private GithubUserDAO githubUserDAO;
+
     private RestTemplate restTemplate;
+
+    private GithubUserMapper githubUserMapper;
+
+    @Autowired
+    public GithubUserService(RestTemplate restTemplate, GithubUserDAO githubUserDAO, GithubUserMapper githubUserMapper) {
+        this.restTemplate = restTemplate;
+        this.githubUserDAO = githubUserDAO;
+        this.githubUserMapper = githubUserMapper;
+    }
 
     public GithubUserResponse getGithubUserInformation(String login) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.set("X-GitHub-Api-Version", xGitHubApiVersion);
             ResponseEntity<GithubUserDto> response = restTemplate.exchange(githubUserApiUrl + login, HttpMethod.GET, new HttpEntity<>(headers), GithubUserDto.class);
-            return mapDtoToData(response.getBody());
+            resolveGithubUserCounter(response.getBody());
+            return githubUserMapper.mapDtoToResponse(response.getBody());
         } catch (Exception e) {
             throw new UserNotFoundException("login", login);
         }
     }
 
-    private GithubUserResponse mapDtoToData(GithubUserDto githubUserDto) {
-        GithubUserResponse githubUserResponse = new GithubUserResponse.GithubUserDataBuilder()
-                .setId(githubUserDto.getId())
-                .setName(githubUserDto.getName())
-                .setType(githubUserDto.getType())
-                .setLogin(githubUserDto.getLogin())
-                .setAvatarUrl(githubUserDto.getAvatarUrl())
-                .setCreatedAt(githubUserDto.getCreatedAt())
-                .build();
-        if(shouldReturnCalculations(githubUserDto.getFollowers(), githubUserDto.getPublicRepos())) {
-            githubUserResponse.setCalculations(githubUserDto.getFollowers(), githubUserDto.getPublicRepos());
+    private void resolveGithubUserCounter(GithubUserDto githubUserDto) {
+        GithubUserResponse githubUserResponse = githubUserMapper.mapDtoToResponse(githubUserDto);
+        GithubUser githubUser = getGithubUser(githubUserDto.getLogin());
+        if(Objects.isNull(githubUser)) {
+            saveGithubUser(githubUserMapper.mapResponseToEntity(githubUserResponse));
         }
-        return githubUserResponse;
+        else {
+            githubUser.setRequestCount(githubUser.getRequestCount()+1);
+            updateGithubUser(githubUser);
+        }
     }
 
-    private boolean shouldReturnCalculations(Integer followers, Integer publicRepos) {
-        return Objects.nonNull(followers) && followers != 0 && Objects.nonNull(publicRepos);
+    private void saveGithubUser(GithubUser githubUser) {
+        githubUserDAO.save(githubUser);
+    }
+
+    private void updateGithubUser(GithubUser githubUser) {
+        githubUserDAO.update(githubUser);
+    }
+
+    private GithubUser getGithubUser(String login) {
+        return githubUserDAO.findByLogin(login);
     }
 }
