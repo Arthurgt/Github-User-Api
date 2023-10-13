@@ -37,6 +37,7 @@ public class GithubUserService {
                 .setId(githubUserDto.getId())
                 .setName(githubUserDto.getName())
                 .setType(githubUserDto.getType())
+                .setLogin(githubUserDto.getLogin())
                 .setAvatarUrl(githubUserDto.getAvatarUrl())
                 .setCreatedAt(githubUserDto.getCreatedAt())
                 .build();
