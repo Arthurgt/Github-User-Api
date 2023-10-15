@@ -3,7 +3,7 @@ package arthurgt.com.github.githubuserapi.data;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 
-public class GithubUserDto {
+public class GithubUserDTO {
 
     private long id;
     private String login;
@@ -17,9 +17,9 @@ public class GithubUserDto {
     @JsonProperty("created_at")
     private LocalDate createdAt;
 
-    public GithubUserDto() {}
+    public GithubUserDTO() {}
 
-    public GithubUserDto(long id, String login, String name, String type, String avatarUrl, Integer followers, Integer publicRepos, LocalDate createdAt) {
+    public GithubUserDTO(long id, String login, String name, String type, String avatarUrl, Integer followers, Integer publicRepos, LocalDate createdAt) {
         this.id = id;
         this.login = login;
         this.name = name;

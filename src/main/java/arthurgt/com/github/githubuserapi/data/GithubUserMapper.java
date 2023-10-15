@@ -10,7 +10,7 @@ public class GithubUserMapper {
 
     public GithubUserMapper() {}
 
-    public GithubUserResponse mapDtoToResponse(GithubUserDto githubUserDto) {
+    public GithubUserResponse mapDTOToResponse(GithubUserDTO githubUserDto) {
         GithubUserResponse githubUserResponse = new GithubUserResponse.GithubUserDataBuilder()
                 .setId(githubUserDto.getId())
                 .setName(githubUserDto.getName())
